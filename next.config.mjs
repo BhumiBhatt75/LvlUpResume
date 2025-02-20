@@ -18,6 +18,12 @@ const nextConfig = {
     }
     return config;
   },
+
+  // Update serverless configuration without __dirname
+  serverRuntimeConfig: {
+    // Use relative paths instead
+    PROJECT_ROOT: '.',
+  },
 };
 
 export default nextConfig;

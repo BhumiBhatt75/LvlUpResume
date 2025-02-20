@@ -1,18 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
-import puppeteer from 'puppeteer';
+import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer-core';
 
 export async function POST(req: NextRequest) {
   let browser;
   try {
     const { formData } = await req.json();
 
-    browser = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-      ]
-    });
+    // Configure browser for different environments
+    const isProduction = process.env.NODE_ENV === 'production';
+    
+    if (isProduction) {
+      // Production (Vercel) configuration
+      browser = await puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: chromium.headless,
+        ignoreHTTPSErrors: true,
+      });
+    } else {
+      // Local development configuration
+      browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox'],
+      });
+    }
 
     const page = await browser.newPage();
     await page.setViewport({ width: 1200, height: 1600 });
@@ -101,7 +114,9 @@ export async function POST(req: NextRequest) {
       </html>
     `;
 
-    await page.setContent(htmlContent);
+    await page.setContent(htmlContent, {
+      waitUntil: 'networkidle0',
+    });
 
     const pdf = await page.pdf({
       format: 'A4',
@@ -124,6 +139,11 @@ export async function POST(req: NextRequest) {
     console.error('PDF Generation Error:', error);
     if (browser) await browser.close();
     
-    return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Failed to generate PDF',
+      details: error.message 
+    }, { 
+      status: 500 
+    });
   }
 } 
