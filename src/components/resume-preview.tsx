@@ -53,10 +53,9 @@ const ResumePreview = () => {
 
   const handleDownload = async () => {
     try {
-      // Show loading state
       setIsLoading(true);
 
-      const response = await fetch('/api/generate-pdf', {
+      const response = await fetch('/api/pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ formData }),
@@ -66,16 +65,15 @@ const ResumePreview = () => {
         throw new Error('Failed to generate PDF');
       }
 
-      // Create blob and download
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'resume.pdf';
-      document.body.appendChild(a);
-      a.click();
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${formData.name.replace(/\s+/g, '_')}_resume.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
 
     } catch (error) {
       console.error('Download error:', error);
