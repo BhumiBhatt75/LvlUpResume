@@ -42,6 +42,7 @@ const resumeTemplates: ResumeTemplates = {
 const ResumePreview = () => {
   const [formData, setFormData] = useState<any>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>(TEMPLATES.MODERN);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const storedData = localStorage.getItem('resumeData');
@@ -52,26 +53,35 @@ const ResumePreview = () => {
 
   const handleDownload = async () => {
     try {
+      // Show loading state
+      setIsLoading(true);
+
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ formData }),
       });
 
-      if (!response.ok) throw new Error('Failed to generate PDF');
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
 
+      // Create blob and download
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${formData.name.replace(/\s+/g, '_')}_Resume.pdf`;
+      a.download = 'resume.pdf';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
+
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
+      console.error('Download error:', error);
+      alert('Failed to download PDF. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 

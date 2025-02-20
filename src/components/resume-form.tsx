@@ -14,7 +14,6 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { FormInputWithHints } from './form-input-with-hints';
 
 // Add this interface at the top of the file
@@ -22,6 +21,39 @@ interface TourStep {
   title: string;
   message: string;
   highlight: string | null;
+}
+
+// Add interfaces for type safety
+interface FormData {
+  name: string;
+  contact1: string;
+  education: {
+    school: string;
+    degree: string;
+    date: string;
+    cgpa: string;
+  };
+  skills: {
+    skills: string;
+    tools: string;
+    languages: string;
+    courses: string;
+  };
+  experience: Array<{
+    title: string;
+    company: string;
+    date: string;
+    description: string;
+  }>;
+  projects: Array<{
+    name: string;
+    description: string;
+    skills: string;
+    date: string;
+    link: string;
+  }>;
+  achievements: string;
+  interests: string;
 }
 
 // Update the debounce function with proper typing
@@ -51,7 +83,7 @@ const debounce = (func: Function, wait: number) => {
 };
 
 const ResumeForm = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     contact1: '',
     education: {
@@ -66,23 +98,19 @@ const ResumeForm = () => {
       languages: '',
       courses: '',
     },
-    experience: [
-      {
-        title: '',
-        company: '',
-        date: '',
-        description: '',
-      },
-    ],
-    projects: [
-      {
-        name: '',
-        description: '',
-        skills: '',
-        date: '',
-        link: '',
-      }
-    ],
+    experience: [{
+      title: '',
+      company: '',
+      date: '',
+      description: '',
+    }],
+    projects: [{
+      name: '',
+      description: '',
+      skills: '',
+      date: '',
+      link: '',
+    }],
     achievements: '',
     interests: '',
   });
@@ -124,11 +152,11 @@ const ResumeForm = () => {
     }
   ];
 
-  // Update handleInputChange to not trigger immediate recalculation
+  // Fix the handleInputChange function
   const handleInputChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
-    setFormData(prev => {
+    setFormData((prev: FormData) => {
       if (!name.includes('.')) {
         return { ...prev, [name]: value };
       }
@@ -148,7 +176,7 @@ const ResumeForm = () => {
         return {
           ...prev,
           [section]: {
-            ...(prev[section] as Record<string, string>),
+            ...prev[section],
             [field]: value
           }
         };
@@ -692,14 +720,13 @@ const ResumeForm = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <div className="bg-blue-100 dark:bg-blue-900 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md flex items-center gap-1 sm:gap-2">
-                <Trophy className="w-3 h-3 sm:w-4 sm:h-4 text-blue-700 dark:text-blue-300" />
-                <span className="font-medium text-xs sm:text-sm text-blue-700 dark:text-blue-300">
+              <div className="bg-blue-100 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md flex items-center gap-1 sm:gap-2">
+                <Trophy className="w-3 h-3 sm:w-4 sm:h-4 text-blue-700" />
+                <span className="font-medium text-xs sm:text-sm text-blue-700">
                   <span className="hidden sm:inline">Level </span>
                   {achievements.level}
                 </span>
               </div>
-              <ThemeToggle />
             </div>
           </div>
 
@@ -714,7 +741,7 @@ const ResumeForm = () => {
                     className={`flex items-center gap-1.5 px-2.5 sm:px-4 py-1.5 transition-all duration-200
                       whitespace-nowrap text-xs sm:text-sm rounded-md flex-1 sm:flex-none justify-center
                       ${activeSection === section.id 
-                        ? 'bg-blue-100 text-blue-700 font-medium dark:bg-blue-900 dark:text-blue-300' 
+                        ? 'bg-blue-100 text-blue-700 font-medium' 
                         : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
                       }`}
                   >
