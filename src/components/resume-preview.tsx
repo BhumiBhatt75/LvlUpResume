@@ -3,10 +3,41 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
-import { ModernTemplate } from './resume-templates/modern';
+import ModernTemplate from './resume-templates/modern';
 import { ProfessionalTemplate } from './resume-templates/professional';
 import { TEMPLATES, type TemplateType } from './resume-templates';
 import { CareerSuggestions } from './career-suggestions';
+
+interface ResumeTemplateProps {
+    formData: any; // Define this according to your form data structure
+}
+
+interface ResumeTemplates {
+    modern: (props: ResumeTemplateProps) => JSX.Element;
+    professional: (props: ResumeTemplateProps) => JSX.Element;
+    minimal: (props: ResumeTemplateProps) => JSX.Element; // Ensure minimal is included
+}
+
+const resumeTemplates: ResumeTemplates = {
+    modern: ({ formData }) => {
+        return (
+            <ModernTemplate formData={formData} />
+        );
+    },
+    professional: ({ formData }) => {
+        return (
+            <ProfessionalTemplate formData={formData} />
+        );
+    },
+    minimal: ({ formData }) => {
+        return (
+            <div>
+                <h1>{formData.name}</h1>
+                {/* Add more rendering logic for the minimal template */}
+            </div>
+        );
+    },
+};
 
 const ResumePreview = () => {
   const [formData, setFormData] = useState<any>(null);
@@ -44,10 +75,7 @@ const ResumePreview = () => {
     }
   };
 
-  const TemplateComponent = {
-    [TEMPLATES.MODERN]: ModernTemplate,
-    [TEMPLATES.PROFESSIONAL]: ProfessionalTemplate,
-  }[selectedTemplate];
+  const TemplateComponent = resumeTemplates[selectedTemplate];
 
   if (!formData) return <div>Loading...</div>;
 

@@ -1,22 +1,10 @@
 "use client";
 
 import React from "react";
-import ResumeForm from "@/components/resume-form";
 import Link from "next/link";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
-const ResumeMaker = () => {
-  return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <h1 className="text-3xl font-bold text-center mb-8">Resume Builder</h1>
-      <ResumeForm />
-    </div>
-  );
-};
-
-export default ResumeMaker;
-
-export function LandingPage() {
+const LandingPage: React.FC = () => {
   return (
     <div className="min-h-[calc(100vh-144px)] flex flex-col">
       {/* Hero Section */}
@@ -100,4 +88,6 @@ export function LandingPage() {
       </div>
     </div>
   );
-}
+};
+
+export default LandingPage;

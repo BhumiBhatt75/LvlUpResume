@@ -1,6 +1,11 @@
-import { ResumeTemplateProps } from './types';
+import React from 'react';
+import { ResumeData } from './types';
 
-export const ModernTemplate = ({ formData }: ResumeTemplateProps) => {
+interface ModernTemplateProps {
+  formData: ResumeData;
+}
+
+const ModernTemplate: React.FC<ModernTemplateProps> = ({ formData }) => {
   return (
     <div className="p-4 sm:p-8 bg-white">
       {/* Header */}
@@ -80,4 +85,6 @@ export const ModernTemplate = ({ formData }: ResumeTemplateProps) => {
       </div>
     </div>
   );
-}; 
+};
+
+export default ModernTemplate; 
