@@ -159,60 +159,6 @@ const ResumeForm = () => {
   }, []);
 
   const handleExperienceChange = React.useCallback((index: number, field: string, value: string) => {
-
-const ResumeForm = () => {
-  const [formData, setFormData] = useState({
-    name: 'VIKAS GUPTA',
-    contact1: '+919781686507 | https://vikasdev.vercel.app/ | vikasgupta.92155@gmail.com',
-    education: {
-      school: 'Thapar Institute of Engineering and Technology',
-      degree: 'BE in Software Engineering',
-      date: 'August 2015 – May 2019',
-      cgpa: '7.80/10.00',
-    },
-    skills: {
-      skills: 'Full Stack Web Development, Application Security, Penetration Testing, Automation, OWASP TOP-10, Googling',
-      tools: 'Visual Studio Code, Burp Suite, OWASP-ZAP, Metasploit, Jira, John the Ripper, Bit Bucket, Nmap, NoCode Tools',
-      languages: 'JavaScript, PHP, Html, CSS, AngularJS, Python, Garv, Django',
-      courses: 'Computer Networks, Operating System, Database Management System, Data Structure and Algorithms, Penetration Testing by Cybrary, Frontend Development by Udacity',
-    },
-    experience: [
-      {
-        title: 'Security Engineer',
-        company: 'RecordedFuture',
-        date: 'May 2023 – Present',
-        description: 'Worked on the development of internal tools and did automation of vulnerability rule creation.\nConduct in-depth research on CVEs to understand the underlying vulnerabilities, affected systems, and potential exploits.\nWork closely with other security team members, including threat analysts, incident responders, and vulnerability assessors, to share knowledge and insights.',
-      },
-      {
-        title: 'Marketing Web Developer',
-        company: 'SecurityTrails',
-        date: 'May 2021 – May 2023',
-        description: 'Worked on the development of multiple landing pages in core website and HubSpot landing pages using Markdown, Html, JS, etc.\nDeveloped Chrome Browser Extension for Cyber Security Marketing.\nWorked on scripting for microservices and blogposts for Marketing.\nWorked on Bpgview.io website using Laravel, Html, etc.\nWorked on core website to improve CLS, LCP for google page speed score.',
-      },
-    ],
-    projects: 'SEO Ninja, Contenxt Analyzer, Shoutout, Hulu Clone, Intrustion Detection System, etc.',
-    achievements: 'CVE-2023-3479, Reflected XSS in HestiaCP (https://nvd.nist.gov/vuln/detail/CVE-2023-3479)\nGot hall of fame/rewards from top companies for reporting security vulnerabilities.\nGot Employee of the Quarter Award in Xlpat Labs on 08th May 2020\nGot Invited to fully sponsored Cyber Security Convention by Govt. of India on 03th-06th July 2020.\nSecured 3rd place in CTF organized by CyberTalents on 09th May 2018.\nSecured 1st place in CTF orgnized by Creative Computing Society and Thapar University on 09th September 2017.\nSelected among 49 others for Frontend scholarship in Udacity Sponsored by Google India.\nSecured 41th position and swag in CTF hosted by DRDO (Defence Research and Development Organisation India)',
-    interests: 'Security Community Affiliations: OWASP Chandigarh, Null Chandigarh\nSecurity Conferences Attended: DefCon 28, BSides Delhi 2019',
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    if (name.includes('.')) {
-      const [section, field] = name.split('.');
-      setFormData(prev => ({
-        ...prev,
-        [section]: {
-          ...prev[section as keyof typeof prev],
-          [field]: value
-        }
-      }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const handleExperienceChange = (index: number, field: string, value: string) => {
-
     setFormData(prev => ({
       ...prev,
       experience: prev.experience.map((exp, i) => 
@@ -224,14 +170,22 @@ const ResumeForm = () => {
   const addExperience = () => {
     setFormData(prev => ({
       ...prev,
-      experience: [...prev.experience, { title: '', company: '', date: '', description: '' }],
+      experience: [
+        ...prev.experience,
+        {
+          title: '',
+          company: '',
+          date: '',
+          description: '',
+        }
+      ]
     }));
   };
 
   const removeExperience = (index: number) => {
     setFormData(prev => ({
       ...prev,
-      experience: prev.experience.filter((_, i) => i !== index),
+      experience: prev.experience.filter((_, i) => i !== index)
     }));
   };
 
@@ -369,13 +323,38 @@ const ResumeForm = () => {
   };
 
   const sections = [
-    { id: 'personal', icon: User, label: 'Personal Info' },
-    { id: 'education', icon: School, label: 'Education' },
-    { id: 'skills', icon: Code, label: 'Skills' },
-    { id: 'experience', icon: Briefcase, label: 'Experience' },
-    { id: 'projects', icon: BookOpen, label: 'Projects' },
-    { id: 'achievements', icon: Award, label: 'Achievements' },
+    { id: 'personal', label: 'Personal Info', icon: User },
+    { id: 'education', label: 'Education', icon: School },
+    { id: 'skills', label: 'Skills', icon: Code },
+    { id: 'experience', label: 'Experience', icon: Briefcase },
+    { id: 'projects', label: 'Projects', icon: BookOpen },
+    { id: 'achievements', label: 'Achievements', icon: Award },
   ];
+
+  const calculateSectionCompletion = (sectionId: string): number => {
+    switch (sectionId) {
+      case 'personal':
+        return ((formData.name ? 1 : 0) + (formData.contact1 ? 1 : 0)) / 2 * 100;
+      case 'education':
+        const eduFields = Object.values(formData.education).filter(Boolean).length;
+        return (eduFields / 4) * 100;
+      case 'skills':
+        const skillFields = Object.values(formData.skills).filter(Boolean).length;
+        return (skillFields / 4) * 100;
+      case 'experience':
+        return formData.experience.filter(exp => 
+          exp.title && exp.company && exp.date && exp.description
+        ).length / formData.experience.length * 100;
+      case 'projects':
+        return formData.projects.filter(proj => 
+          proj.name && proj.description && proj.skills
+        ).length / formData.projects.length * 100;
+      case 'achievements':
+        return formData.achievements ? 100 : 0;
+      default:
+        return 0;
+    }
+  };
 
   const ScoreDisplay = () => {
     const [isAnimating, setIsAnimating] = useState(false);
@@ -544,27 +523,6 @@ const ResumeForm = () => {
       </div>
     </div>
   );
-
-  const calculateSectionCompletion = (sectionId: string): number => {
-    switch (sectionId) {
-      case 'personal':
-        return ((formData.name ? 50 : 0) + (formData.contact1 ? 50 : 0));
-      case 'education':
-        return Object.values(formData.education).filter(v => v.length > 0).length * 25;
-      case 'skills':
-        return Object.values(formData.skills).filter(v => v.length > 0).length * 25;
-      case 'experience':
-        return Math.min(100, formData.experience.filter(exp => 
-          exp.title && exp.company && exp.description
-        ).length * 33);
-      case 'projects':
-        return formData.projects.length > 50 ? 100 : Math.round((formData.projects.length / 50) * 100);
-      case 'achievements':
-        return formData.achievements.length > 50 ? 100 : Math.round((formData.achievements.length / 50) * 100);
-      default:
-        return 0;
-    }
-  };
 
   const AvatarGuide = () => {
     const [isHappy, setIsHappy] = useState(false);
@@ -1113,79 +1071,6 @@ const ResumeForm = () => {
       </main>
 
       <AvatarGuide />
-
-  };
-
-  const handleCreateResume = () => {
-    // Store the form data in localStorage
-    localStorage.setItem('resumeData', JSON.stringify(formData));
-    // Open the preview page in a new tab
-    window.open('/resume-preview', '_blank');
-  };
-
-  return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <Card>
-        <CardContent className="space-y-2 p-6">
-          <Label htmlFor="name">Name</Label>
-          <Input id="name" name="name" value={formData.name} onChange={handleInputChange} />
-          
-          <Label htmlFor="contact">Contact</Label>
-          <Input id="contact" name="contact" value={formData.contact1} onChange={handleInputChange} />
-          
-          <Label>Education</Label>
-          <Input name="education.school" value={formData.education.school} onChange={handleInputChange} placeholder="School" />
-          <Input name="education.degree" value={formData.education.degree} onChange={handleInputChange} placeholder="Degree" />
-          <Input name="education.date" value={formData.education.date} onChange={handleInputChange} placeholder="Date" />
-          <Input name="education.cgpa" value={formData.education.cgpa} onChange={handleInputChange} placeholder="CGPA" />
-          
-          <Label>Skills</Label>
-          <Textarea name="skills.skills" value={formData.skills.skills} onChange={handleInputChange} placeholder="Skills" />
-          <Textarea name="skills.tools" value={formData.skills.tools} onChange={handleInputChange} placeholder="Tools" />
-          <Textarea name="skills.languages" value={formData.skills.languages} onChange={handleInputChange} placeholder="Languages" />
-          <Textarea name="skills.courses" value={formData.skills.courses} onChange={handleInputChange} placeholder="Courses" />
-          
-          <Label>Experience</Label>
-          {formData.experience.map((exp, index) => (
-            <div key={index} className="space-y-2">
-              <Input 
-                value={exp.title} 
-                onChange={(e) => handleExperienceChange(index, 'title', e.target.value)} 
-                placeholder="Job Title" 
-              />
-              <Input 
-                value={exp.company} 
-                onChange={(e) => handleExperienceChange(index, 'company', e.target.value)} 
-                placeholder="Company" 
-              />
-              <Input 
-                value={exp.date} 
-                onChange={(e) => handleExperienceChange(index, 'date', e.target.value)} 
-                placeholder="Date" 
-              />
-              <Textarea 
-                value={exp.description} 
-                onChange={(e) => handleExperienceChange(index, 'description', e.target.value)} 
-                placeholder="Job Description" 
-              />
-            </div>
-          ))}
-          
-          <Label htmlFor="projects">Projects</Label>
-          <Textarea id="projects" name="projects" value={formData.projects} onChange={handleInputChange} />
-          
-          <Label htmlFor="achievements">Achievements</Label>
-          <Textarea id="achievements" name="achievements" value={formData.achievements} onChange={handleInputChange} />
-          
-          <Label htmlFor="interests">Interests</Label>
-          <Textarea id="interests" name="interests" value={formData.interests} onChange={handleInputChange} />
-          
-          <Button onClick={handleCreateResume} className="mt-4 text-white">
-            Preview Resume
-          </Button>
-        </CardContent>
-      </Card>
-
     </div>
   );
 };
