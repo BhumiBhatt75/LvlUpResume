@@ -10,16 +10,6 @@
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.6",
-
-    "@radix-ui/react-label": "^2.1.0",
-    "@radix-ui/react-popover": "^1.1.6",
-    "@radix-ui/react-slot": "^1.1.0",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
-    "framer-motion": "^12.4.5",
-    "lucide-react": "^0.453.0",
-    "next": "14.2.15",
-
     "@radix-ui/react-label": "^2.1.2",
     "@radix-ui/react-popover": "^1.1.6",
     "@radix-ui/react-slot": "^1.1.2",
@@ -28,9 +18,9 @@
     "framer-motion": "^12.4.5",
     "lucide-react": "^0.453.0",
     "next": "^14.2.24",
-
     "next-themes": "^0.4.4",
     "pdf-lib": "^1.17.1",
+    "pdfkit": "^0.16.0",
     "puppeteer": "^19.11.1",
     "react": "^18",
     "react-dom": "^18",

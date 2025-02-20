@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 
+interface Experience {
+    title: string;
+    company: string;
+    date: string;
+    description: string;
+    // Add other properties as needed
+}
+
+interface Project {
+    name: string;
+    date: string;
+    description: string;
+    skills: string;
+    // Add other properties as needed
+}
+
 export async function POST(req: NextRequest) {
   let browser;
   try {
@@ -72,7 +88,7 @@ export async function POST(req: NextRequest) {
 
           <div class="section">
             <div class="section-title">Experience</div>
-            ${formData.experience.map(exp => `
+            ${formData.experience.map((exp: Experience) => `
               <div class="item">
                 <div class="item-title">${exp.title} - ${exp.company}</div>
                 <div class="item-subtitle">${exp.date}</div>
@@ -92,7 +108,7 @@ export async function POST(req: NextRequest) {
           ${formData.projects.length > 0 ? `
             <div class="section">
               <div class="section-title">Projects</div>
-              ${formData.projects.map(project => `
+              ${formData.projects.map((project: Project) => `
                 <div class="item">
                   <div class="item-title">${project.name}</div>
                   <div class="item-subtitle">${project.date}</div>
@@ -136,9 +152,12 @@ export async function POST(req: NextRequest) {
     console.error('PDF Generation Error:', error);
     if (browser) await browser.close();
     
+    // Type assertion to ensure error has a message property
+    const errorMessage = (error as Error).message;
+
     return NextResponse.json({ 
       error: 'PDF generation failed',
-      details: error.message 
+      details: errorMessage 
     }, { 
       status: 500 
     });
