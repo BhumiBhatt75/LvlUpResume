@@ -1,7 +1,8 @@
+import React from 'react';
 import { ResumeTemplateProps } from './types';
 import { Mail, Phone, Linkedin, Link as LinkIcon } from 'lucide-react';
 
-export const PDFTemplate = ({ formData }: ResumeTemplateProps) => {
+const PdfTemplate: React.FC<ResumeTemplateProps> = ({ formData }) => {
   return (
     <div className="p-[40px] bg-white w-[21cm] min-h-[29.7cm] mx-auto">
       {/* Header */}
@@ -135,4 +136,6 @@ export const PDFTemplate = ({ formData }: ResumeTemplateProps) => {
       </div>
     </div>
   );
-}; 
+};
+
+export default PdfTemplate; 

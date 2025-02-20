@@ -1,6 +1,8 @@
 "use client"
 
 import React from 'react';
+import Bot from './Bot';
+import { X } from 'lucide-react';
 
 const AvatarGuide = () => {
   const [showGuide, setShowGuide] = React.useState(false);

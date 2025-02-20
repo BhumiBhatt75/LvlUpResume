@@ -1,6 +1,8 @@
+"use client";
+
 import '../styles/globals.css'
 import { Inter, Playfair_Display } from 'next/font/google'
-import { ThemeProvider } from "@/components/theme-provider"
+import MyThemeProvider from "@/components/theme-provider"
 import { BookOpen } from 'lucide-react'
 import Link from 'next/link'
 
@@ -14,11 +16,6 @@ const playfair = Playfair_Display({
   variable: '--font-playfair'
 })
 
-export const metadata = {
-  title: 'Resume Builder',
-  description: 'Create professional resumes easily',
-}
-
 export default function RootLayout({
   children,
 }: {
@@ -27,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${playfair.variable} font-sans bg-gray-50`}>
-        <ThemeProvider 
+        <MyThemeProvider 
           attribute="class" 
           defaultTheme="light" 
           enableSystem={false}
@@ -74,7 +71,7 @@ export default function RootLayout({
               </div>
             </footer>
           </div>
-        </ThemeProvider>
+        </MyThemeProvider>
       </body>
     </html>
   )
