@@ -13,10 +13,14 @@ export async function POST(req: NextRequest) {
     if (isProduction) {
       // Production (Vercel) configuration
       browser = await puppeteer.launch({
-        args: chromium.args,
+        args: [
+          ...chromium.args,
+          '--hide-scrollbars',
+          '--disable-web-security'
+        ],
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath(),
-        headless: chromium.headless,
+        headless: true,
         ignoreHTTPSErrors: true,
       });
     } else {
@@ -24,6 +28,11 @@ export async function POST(req: NextRequest) {
       browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox'],
+        executablePath: process.platform === 'win32'
+          ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+          : process.platform === 'linux'
+          ? '/usr/bin/google-chrome'
+          : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
       });
     }
 
