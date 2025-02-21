@@ -216,9 +216,11 @@ export const FormInputWithHints = ({
   const currentHints = hints || defaultHints[name as keyof typeof defaultHints];
 
   return (
-    <div className="relative space-y-1">
+    <div className="relative space-y-1.5">
       <div className="flex items-center justify-between">
-        <Label htmlFor={id} className="text-sm">{label}</Label>
+        <Label htmlFor={id} className="text-sm font-medium text-gray-700">
+          {label}
+        </Label>
         {currentHints && (
           <Popover open={showHints} onOpenChange={setShowHints}>
             <PopoverTrigger asChild>
@@ -260,14 +262,16 @@ export const FormInputWithHints = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          className={`w-full min-h-[80px] sm:min-h-[100px] px-3 py-2 text-sm sm:text-base
+          className={`w-full min-h-[80px] sm:min-h-[100px] px-3 py-2 
+            text-base text-gray-900
             border rounded-lg resize-none
-            placeholder:text-gray-400
+            placeholder:text-gray-500
+            bg-white
             ${isFocused 
               ? 'border-gray-500 ring-1 ring-gray-200' 
-              : 'border-gray-200 hover:border-gray-300'
+              : 'border-gray-300 hover:border-gray-400'
             }
-            focus:outline-none
+            focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
             leading-relaxed
             transition-colors duration-200`}
         />
@@ -280,14 +284,16 @@ export const FormInputWithHints = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          className={`w-full h-9 sm:h-11 px-3 text-sm sm:text-base
+          className={`w-full h-10 sm:h-11 px-3 
+            text-base text-gray-900
             border rounded-lg
-            placeholder:text-gray-400
+            placeholder:text-gray-500
+            bg-white
             ${isFocused 
               ? 'border-gray-500 ring-1 ring-gray-200' 
-              : 'border-gray-200 hover:border-gray-300'
+              : 'border-gray-300 hover:border-gray-400'
             }
-            focus:outline-none
+            focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
             transition-colors duration-200`}
         />
       )}
